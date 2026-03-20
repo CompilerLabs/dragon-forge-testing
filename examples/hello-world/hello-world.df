@@ -1,0 +1,8 @@
+[ main ]
+dragon.main()() = {
+    [ set string (buffer) to message variable ]
+    dragon.set("Roaring dragons sometimes slumber...%0a;")(message)
+
+    [ print buffer as string ]
+    dragon.print.buffer_as_string(message)()
+}
