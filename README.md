@@ -1,3 +1,3 @@
-# Dragon Testing
+# DragonForge Examples
 
-A repository for testing the dragon programming language.
+A repository documenting and giving runnable examples of the dragon-forge programming language.
