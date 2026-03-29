@@ -3,7 +3,25 @@
         {
             "name": "Hello World!",
             "files": [
-                "./hello_world.df"
+                "./tests/hello_world.df"
+            ]
+        },
+        {
+            "name": "Scratch",
+            "files": [
+                "./tests/scratch.df"
+            ]
+        },
+        {
+            "name": "Anvil",
+            "files": [
+                "./tests/test_anvil.df"
+            ]
+        },
+        {
+            "name": "json",
+            "files": [
+                "./tests/test_json.df"
             ]
         }
     ]

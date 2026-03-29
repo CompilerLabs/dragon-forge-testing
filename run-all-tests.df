@@ -1,6 +1,6 @@
 [ main ]
 df.main()() = {
-    [ for speed, disable address catching ]
+    [ toggle address catching ]
     df.copy(df.true)(df.catch_addresses)
 
     [ tell user all tests are running ]
@@ -9,18 +9,15 @@ df.main()() = {
 
     [ run all tests ]
     df_tests.run_all_tests()()
-
-    [ run hello world test ]
-    test.hello_world()()
     
     [ run foundationals test ]
-    test.scratch()()
+    [ test.scratch()() ]
 
     [ test json ]
-    test.json()()
+    [ test.json()() ]
 
     [ test anvil ]
-    test.anvil()()
+    [ test.anvil()() ]
 }
 
 [ run all tests ]
@@ -93,7 +90,7 @@ df_tests.run_all_tests()() = {
 
         [ print test name ]
         df.json.traverse.retrieve_parsling.by_name(test.parsling, test_name_json_name)(json_parsling.name, found, not_found)
-        @json.run_all_tests.json_error not_found = {
+        @json.run_all_tests.no_test_name not_found = {
             [ "name" not found ]
             df.set("The test: %22;")(message)
             df.print.buffer_as_string(message)()
@@ -106,29 +103,72 @@ df_tests.run_all_tests()() = {
         }
 
         [ print test name ]
-        df.set("----------------%0a;Running test: ")(message)
+        df.set("-------------%0a;Running test: ")(message)
         df.print.buffer_as_string(message)()
         df.print.buffer_as_string(json_parsling.name:value.datum:raw)()
-        df.set(":%0a;----------------%0a;")(message)
+        df.set(":%0a;-------------%0a;")(message)
         df.print.buffer_as_string(message)()
 
-        [ perform test ]
-        [ TODO ]
+        [ get files's json parsling & it's metadata ]
+        df.json.traverse.retrieve_parsling.by_name(test.parsling, test_files_json_name)(json_parsling.files, found, not_found)
+        df.json.traverse.calculate.parsling_list_metadata(json_parsling.files)(current, parsling_byte_size, test_files.count)
+
+        [ check for no files ]
+        df.integer.within_range(df.constant.0, test_files.count, df.constant.0)(no_files_present, files_present)
+        @json.run_all_tests.no_files_to_test no_files_present = {
+            [ "files" not found ]
+            df.set("The test: %22;")(message)
+            df.print.buffer_as_string(message)()
+            df.print.buffer_as_string(test_name_json_name)()
+            df.set("%22; Had an invalid json setup. There were no file paths listed to compile.%0a;")(message)
+            df.print.buffer_as_string(message)()
+
+            [ exit this test running ]
+            df.jump(not_found, @json.next_test)()
+        }
+
+        [ open files list ]
+        df.structure.byte_size(test_files_json_name)(buffer.byte_size)
+        df.integer.multiply(test_files.count, buffer.byte_size)(increase)
+        df.list.open(increase)(sources)
+
+        [ setup file index ]
+        df.copy(df.constant.0)(test_files.index)
+        df.integer.subtract(test_files.count, df.constant.1)(test_files.max_index)
+
+        [ get sources ]
+        @json.run_all_tests.get_test_files df.always = {
+            [ check for end of loop ]
+            df.integer.within_range(df.constant.0, test_files.index, test_files.max_index)(in_range, out_of_range)
+            df.jump.bottom(out_of_range, @json.run_all_tests.get_test_files)()
+            
+            [ get file path from list ]
+            df.json.traverse.retrieve_parsling.by_index(json_parsling.files, test_files.index)(test_file.parsling, found, not_found)
+            df.buffer.trim_quotes(test_file.parsling:value.datum:raw)(file_path_string)
+
+            [ load file into buffer ]
+            df.file_to_buffer(file_path_string)(user_code_file)
+
+            [ load user code to list ]
+            df.list.append.buffer(sources, user_code_file)(sources)
+
+            [ next file ]
+            df.integer.add(test_files.index, df.constant.1)(test_files.index)
+            df.jump.top(df.always, @json.run_all_tests.get_test_files)()
+        }
+
+        [ run test ]
+        df.pack.null()(program.input !df.buffer)
+        df.just_run(sources, program.input)(compilation.error, program.result, program.error)
+
+        [ print compilation error if occured ]
+        df.error.print_if_occured(compilation.error)()
 
         [ next test ]
+        @json.next_test
         df.integer.add(tests.index, df.constant.1)(tests.index)
         df.jump.top(df.always, @json.run_all_tests)()
     }
-}
-
-[ hello world ]
-test.hello_world()() = {
-    [ setup file path ]
-    df.set("./tests/hello-world/hello-world.df")(file_path)
-    df.pack.null()(program.input !df.buffer)
-
-    [ run test ]
-    df.just_run.one_file(file_path, program.input)(compilation.error, program.result, program.error)
 }
 
 [ basic language abilities ]
