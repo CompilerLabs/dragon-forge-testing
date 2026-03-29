@@ -1,7 +1,7 @@
 [ main ]
 df.main()() = {
     [ for speed, disable address catching ]
-    df.copy(df.false)(df.catch_addresses)
+    df.copy(df.true)(df.catch_addresses)
 
     [ tell user all examples are running ]
     df.set("Running all examples!%0a;")(message)
@@ -38,6 +38,9 @@ test.scratch()() = {
 
     [ run test ]
     df.just_run.one_file(file_path, program.input)(compilation.error, program.result, program.error)
+
+    [ print error ]
+    df.error.print_if_occured(compilation.error)()
 }
 
 [ test json abilities ]

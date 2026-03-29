@@ -515,12 +515,14 @@ scratch.test.compiler_assorted()() = {
 
     [ compile ]
     df.compiler.compile(sources.buffer, settings)(byte_code, debug_information, compiler.error)
-    df.error.convert_compiler_error_to_dragon_error(compiler.error)(error)
-
-    [ print message & skip context creation ]
     @print_compilation_error compiler.error:occured = {
-        df.print.buffer_as_string(compiler.error:message)()
-        df.print.new_line()()
+        [ generate error ]
+        df.error.generate(compiler.error:message, compiler.error:location)(compilation.error)
+
+        [ print error ]
+        df.error.print_if_occured(compilation.error)()
+
+        [ skip context creation and program running ]
         df.jump(df.always, @clean_up)()
     }
 
