@@ -2,6 +2,7 @@
     "tests": [
         {
             "name": "Hello World!",
+            "manual_checking": true,
             "files": [
                 "./tests/hello_world.df"
             ]

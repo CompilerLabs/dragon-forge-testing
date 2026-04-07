@@ -57,6 +57,8 @@ df.main()() = {
     df.integer.subtract(tests.count, df.constant.1)(tests.max_index)
     df.set("name")(test_name_json_name)
     df.set("files")(test_files_json_name)
+    df.set("manual_checking")(manual_checking_name)
+    df.set("true")(checking_true_string)
 
     [ check for no tests ]
     df.integer.within_range(df.constant.0, tests.count, df.constant.0)(in_range, out_of_range)
@@ -88,11 +90,24 @@ df.main()() = {
             df.jump.bottom(not_found, @df.master_scope)()
         }
 
-        [ print test name ]
+        [ print test header ]
         df.set("-------------%0a;Running test: ")(message)
         df.print.buffer_as_string(message)()
         df.print.buffer_as_string(json_parsling.name:value.datum:raw)()
-        df.set(":%0a;-------------%0a;")(message)
+        df.set(":%0a;")(message)
+        df.print.buffer_as_string(message)()
+        
+        [ print manual test check if found as enabled ]
+        df.json.traverse.retrieve_parsling.by_name(test.parsling, manual_checking_name)(json_parsling.manual_checking, found, not_found)
+        df.check.buffer_contents_are_equal(checking_true_string, json_parsling.manual_checking:value.datum:raw)(is_true, is_false)
+        @json.run_all_tests.print_manual_checking is_true = {
+            [ print header ]
+            df.set("%22;manual_checking%22;: true%0a;")(message)
+            df.print.buffer_as_string(message)()
+        }
+
+        [ print test footer ]
+        df.set("-------------%0a;")(message)
         df.print.buffer_as_string(message)()
 
         [ get files's json parsling & it's metadata ]

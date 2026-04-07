@@ -1,0 +1,30 @@
+[
+    Basics
+    - Test basic abilities and perform sanity checks.
+]
+
+[ entry point ]
+df.main()() = {
+    [ test value setting ]
+    basics.test.test_value_setting()()
+}
+
+[ test basic value setting ]
+basics.test.test_value_setting()() = {
+    [ test setting booleans ]
+    df.set(df.boolean.false)(boolean.false) [ false ]
+    df.set(df.boolean.true)(boolean.true) [ true ]
+
+    [ test writing numbers ]
+    df.set(df.binary.__101010__101010__)(binary) [ binary number with separators ]
+    df.set(df.integer.1_000)() [ unsigned integer ]
+    df.set(df.integer.n2_000)() [ signed integer ]
+    df.set(df.hexadecimal.0123456789_abcdef)() [ hexadecimal ]
+
+    [ print numbers ]
+}
+
+[ print number as all types ]
+basics.print_every_numberal_literal(number !dragon.cell)() = {
+    df.set("%09;Every possible literal:%0a;")(message)
+}
