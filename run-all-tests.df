@@ -8,20 +8,6 @@ df.main()() = {
     df.print.buffer_as_string(message)()
 
     [ run all tests ]
-    df_tests.run_all_tests()()
-    
-    [ run foundationals test ]
-    [ test.scratch()() ]
-
-    [ test json ]
-    [ test.json()() ]
-
-    [ test anvil ]
-    [ test.anvil()() ]
-}
-
-[ run all tests ]
-df_tests.run_all_tests()() = {
     [ get json file ]
     df.set("./tests/tests.json")(file_path)
     df.file_to_buffer(file_path)(json)
@@ -169,37 +155,4 @@ df_tests.run_all_tests()() = {
         df.integer.add(tests.index, df.constant.1)(tests.index)
         df.jump.top(df.always, @json.run_all_tests)()
     }
-}
-
-[ basic language abilities ]
-test.scratch()() = {
-    [ setup file path ]
-    df.set("./tests/scratch.df")(file_path)
-    df.pack.null()(program.input !df.buffer)
-
-    [ run test ]
-    df.just_run.one_file(file_path, program.input)(compilation.error, program.result, program.error)
-
-    [ print error ]
-    df.error.print_if_occured(compilation.error)()
-}
-
-[ test json abilities ]
-test.json()() = {
-    [ setup file path ]
-    df.set("./tests/test_json.df")(file_path)
-    df.pack.null()(program.input !df.buffer)
-
-    [ run test ]
-    df.just_run.one_file(file_path, program.input)(compilation.error, program.result, program.error)
-}
-
-[ test anvil abilities ]
-test.anvil()() = {
-    [ setup file path ]
-    df.set("./tests/test_anvil.df")(file_path)
-    df.pack.null()(program.input !df.buffer)
-
-    [ run test ]
-    df.just_run.one_file(file_path, program.input)(compilation.error, program.result, program.error)
 }

@@ -19,7 +19,7 @@
             ]
         },
         {
-            "name": "json",
+            "name": "JSON",
             "files": [
                 "./tests/test_json.df"
             ]
